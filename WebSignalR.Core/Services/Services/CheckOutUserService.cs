@@ -23,19 +23,16 @@ namespace WebSignalR.Core.Services
         {
             Console.WriteLine($"Task Start :{ DateTime.Now.ToStringYYYYMMSS()}");
             await Task.Factory.StartNew(() =>
-            { 
-                while (true)
+            {
+                while (!ct.IsCancellationRequested)
                 {
                     Console.WriteLine($"{ DateTime.Now.ToStringYYYYMMSS()}");
                     _permissionService.CheckoutUsersAsync().ConfigureAwait(false);
                     Thread.Sleep(1000);
-                    if (ct.IsCancellationRequested)
-                    {
-                        Console.WriteLine($"Task Canceled : {DateTime.Now.ToStringYYYYMMSS()}");
-                        break;
-                    } 
-                }
+                }                  
             }, ct);
+
+            Console.WriteLine($"Task Canceled : {DateTime.Now.ToStringYYYYMMSS()}");
         }
 
         public async Task StopAsync()
